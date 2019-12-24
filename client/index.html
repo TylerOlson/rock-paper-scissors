@@ -9,12 +9,12 @@
             var name = "";
             var opponent;
 
-            function playTurn(turn) {
+            function setMove(move) {
                 if (name == "") {
                     alert("You must set a name!");
                 } else {
-                    socket.emit('playTurn', turn)
-                    console.log("Played turn " + turn);
+                    socket.emit('setMove', move)
+                    console.log("Played move " + move);
                 }
             }
 
@@ -25,9 +25,6 @@
                 } else {
                     document.getElementById("nameInput").classList.add('hidden');
                     document.getElementById("joinButton").classList.add('hidden');
-                    //document.getElementById("rockButton").classList.remove('hidden');
-                    //document.getElementById("paperButton").classList.remove('hidden');
-                    //document.getElementById("scissorsButton").classList.remove('hidden');
                     socket.emit('joinQueue', name);
                 }
             }
@@ -47,21 +44,58 @@
 
             socket.on("joinedMatch", function(opp) {
                 opponent = opp;
-                alert("Joined match with " + opponent.name + " (" + opponent.id + ")")
+                document.getElementById("opponent").innerHTML = "Joined match with " + opponent.name + " (" + opponent.id + ")";
+
+                hideQueue();
+                showInput();
             });
+
+            socket.on("bothPlayed", function(data){
+                if (data.winner == "draw") {
+                    document.getElementById("outcome").innerHTML = "Draw!";
+                } else if (data.winner.name == name) {
+                    document.getElementById("outcome").innerHTML = "You won!";
+                } else {
+                    document.getElementById("outcome").innerHTML = "You lost!";
+                }
+                document.getElementById("opponentMove").innerHTML = "Opponents move was " +data.opponent.move;
+            });
+
+            function hideQueue() {
+                document.getElementById("queueTable").classList.add("hidden");
+            }
+
+            function showQueue() {
+                document.getElementById("queueTable").classList.remove("hidden");
+            }
+
+            function showInput() {
+                document.getElementById("rockButton").classList.remove('hidden');
+                document.getElementById("paperButton").classList.remove('hidden');
+                document.getElementById("scissorsButton").classList.remove('hidden');
+            }
+
+            function hideInput() {
+                document.getElementById("rockButton").classList.add('hidden');
+                document.getElementById("paperButton").classList.add('hidden');
+                document.getElementById("scissorsButton").classList.add('hidden');
+            }
         </script>
     </head>
     <body>
-        <input  id="nameInput" type="text" placeholder="Name">
+        <input id="nameInput" type="text" placeholder="Name">
         <button id="joinButton" type="button" onclick="join()">Join</button>
-        <button id="rockButton" class="hidden" type="button" onclick="playTurn('rock')">Rock!</button>
-        <button id="paperButton" class="hidden" type="button" onclick="playTurn('paper')">Paper!</button>
-        <button id="scissorsButton" class="hidden" type="button" onclick="playTurn('scissors')">Scissors!</button>
+        <button id="rockButton" class="hidden" type="button" onclick="setMove('rock')">Rock!</button>
+        <button id="paperButton" class="hidden" type="button" onclick="setMove('paper')">Paper!</button>
+        <button id="scissorsButton" class="hidden" type="button" onclick="setMove('scissors')">Scissors!</button>
         <table id="queueTable">
             <tr>
                 <th>Name</th>
                 <th>ID</th>
             </tr>
         </table>
+        <p id="opponent"></p>
+        <p id="opponentMove"></p>
+        <p id="outcome"></p>
     </body>
 </html>
