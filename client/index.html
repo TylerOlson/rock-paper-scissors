@@ -2,19 +2,48 @@
 <html>
     <head>
         <title>Rock-paper-scissors</title>
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
         <script src="scripts/socket.io.js"></script>
         <script type="text/javascript">
             var socket = io("http://localhost:3000")
+            var name = "";
 
             function playTurn(turn) {
-                socket.emit('playTurn', turn)
-                console.log("Played turn " + turn);
+                if (name == "") {
+                    alert("You must set a name!");
+                } else {
+                    socket.emit('playTurn', turn)
+                    console.log("Played turn " + turn);
+                }
             }
+
+            function play(){
+                name = document.getElementById("nameInput").value;
+                if (name == "") {
+                    alert("You must set a name!");
+                } else {
+                    document.getElementById("nameInput").classList.add('hidden');
+                    document.getElementById("joinButton").classList.add('hidden');
+                    document.getElementById("rockButton").classList.remove('hidden');
+                    document.getElementById("paperButton").classList.remove('hidden');
+                    document.getElementById("scissorsButton").classList.remove('hidden');
+                    socket.emit('joinQueue', name);
+                }
+            }
+
+            socket.on("updateQueue", function(queue){
+            });
+
+            socket.on("joinedMatch", function(opponent) {
+                alert("Joined match with " + opponent.name + " (" + opponent.id + ")")
+            });
         </script>
     </head>
     <body>
-        <button type="button" onclick="playTurn('rock')">Rock!</button>
-        <button type="button" onclick="playTurn('paper')">Paper!</button>
-        <button type="button" onclick="playTurn('scissors')">Scissors!</button>
+        <input  id="nameInput" type="text" placeholder="Name">
+        <button id="joinButton" type="button" onclick="play()">Join</button>
+        <button id="rockButton" class="hidden" type="button" onclick="playTurn('rock')">Rock!</button>
+        <button id="paperButton" class="hidden" type="button" onclick="playTurn('paper')">Paper!</button>
+        <button id="scissorsButton" class="hidden" type="button" onclick="playTurn('scissors')">Scissors!</button>
     </body>
 </html>

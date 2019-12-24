@@ -3,3 +3,5 @@ const moves = {
     PAPER: 'paper',
     SCISSORS: 'scissors'
 }
+
+module.exports.moves = moves;
