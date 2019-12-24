@@ -15,6 +15,7 @@ http.listen(PORT, function() {
 
 io.on('connection', function(socket){
     console.log("Client connected " + socket.id);
+    io.emit("updateQueue", queue);
 
     socket.on('joinQueue', function(name) {
         queue.push({
@@ -22,7 +23,6 @@ io.on('connection', function(socket){
             "name": name
         });
         console.log("Client joined queue " + socket.id)
-        io.emit("updateQueue", queue);
         if (queue.length % 2 == 0) {
             matches.push(new match.Match(queue[0], queue[1]));
             console.log("Created match with " + queue[0].id + " and " + queue[1].id);
@@ -31,10 +31,7 @@ io.on('connection', function(socket){
             queue.splice(0, 2);
             console.log("Current queue: " + queue);
         }
-    });
-
-    socket.on('playTurn', function(text) {
-        console.log("Got turn " + text + " from " + socket.id)
+        io.emit("updateQueue", queue);
     });
 
     socket.on('disconnect', function() {
@@ -44,5 +41,6 @@ io.on('connection', function(socket){
                 queue.splice(i, 1);
             }
         }
+        io.emit("updateQueue", queue);
     });
 });

@@ -7,6 +7,7 @@
         <script type="text/javascript">
             var socket = io("http://localhost:3000")
             var name = "";
+            var opponent;
 
             function playTurn(turn) {
                 if (name == "") {
@@ -17,33 +18,50 @@
                 }
             }
 
-            function play(){
+            function join(){
                 name = document.getElementById("nameInput").value;
                 if (name == "") {
                     alert("You must set a name!");
                 } else {
                     document.getElementById("nameInput").classList.add('hidden');
                     document.getElementById("joinButton").classList.add('hidden');
-                    document.getElementById("rockButton").classList.remove('hidden');
-                    document.getElementById("paperButton").classList.remove('hidden');
-                    document.getElementById("scissorsButton").classList.remove('hidden');
+                    //document.getElementById("rockButton").classList.remove('hidden');
+                    //document.getElementById("paperButton").classList.remove('hidden');
+                    //document.getElementById("scissorsButton").classList.remove('hidden');
                     socket.emit('joinQueue', name);
                 }
             }
 
-            socket.on("updateQueue", function(queue){
+            socket.on("updateQueue", function(queue) {
+                console.log("Updated queue " + queue)
+                var table = document.getElementById("queueTable");
+                table.innerHTML = "<tr><th>Name</th><th>ID</th></tr>";
+                for (i = 0; i < queue.length; i++) {
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(-1);
+                    var cell2 = row.insertCell(-1);
+                    cell1.innerHTML = queue[i].name;
+                    cell2.innerHTML = queue[i].id;
+                }
             });
 
-            socket.on("joinedMatch", function(opponent) {
+            socket.on("joinedMatch", function(opp) {
+                opponent = opp;
                 alert("Joined match with " + opponent.name + " (" + opponent.id + ")")
             });
         </script>
     </head>
     <body>
         <input  id="nameInput" type="text" placeholder="Name">
-        <button id="joinButton" type="button" onclick="play()">Join</button>
+        <button id="joinButton" type="button" onclick="join()">Join</button>
         <button id="rockButton" class="hidden" type="button" onclick="playTurn('rock')">Rock!</button>
         <button id="paperButton" class="hidden" type="button" onclick="playTurn('paper')">Paper!</button>
         <button id="scissorsButton" class="hidden" type="button" onclick="playTurn('scissors')">Scissors!</button>
+        <table id="queueTable">
+            <tr>
+                <th>Name</th>
+                <th>ID</th>
+            </tr>
+        </table>
     </body>
 </html>
