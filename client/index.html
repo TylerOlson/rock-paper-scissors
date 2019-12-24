@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rock-paper-scissors</title>
+        <script src="scripts/socket.io.js"></script>
+        <script type="text/javascript">
+            var socket = io("http://localhost:3000")
+
+            function playTurn(turn) {
+                socket.emit('playTurn', turn)
+                console.log("Played turn " + turn);
+            }
+        </script>
+    </head>
+    <body>
+        <button type="button" onclick="playTurn('rock')">Rock!</button>
+        <button type="button" onclick="playTurn('paper')">Paper!</button>
+        <button type="button" onclick="playTurn('scissors')">Scissors!</button>
+    </body>
+</html>
