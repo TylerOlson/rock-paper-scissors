@@ -1,6 +1,5 @@
 html {
-    background-color: #000000;
-    color: #FFFFFF
+
 }
 
 .gameInput {
@@ -9,4 +8,18 @@ html {
 
 .hidden {
     display: none;
+}
+
+#chat {
+    padding: 0;
+}
+
+.chatMessage {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chatMessageAlt {
+    background-color: #D3D3D3;
 }

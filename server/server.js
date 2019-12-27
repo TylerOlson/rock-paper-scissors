@@ -18,6 +18,11 @@ io.on('connection', function(socket){
     console.log("Client connected " + socket.id);
     io.emit("updateQueue", queue);
 
+    socket.on('sendMessage', function(data){
+        console.log("got message " + data.message + " from " + data.sender);
+        io.emit("sendMessage", data);
+    });
+
     socket.on('joinQueue', function(name) {
         queue.push({
             "id": socket.id,
