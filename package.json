@@ -1,0 +1,23 @@
+{
+  "name": "rock-paper-scissors",
+  "version": "1.0.0",
+  "description": "Multiplayer rock-paper-scissors game in JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TylerOlson/rock-paper-scissors.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TylerOlson/rock-paper-scissors/issues"
+  },
+  "homepage": "https://github.com/TylerOlson/rock-paper-scissors#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0"
+  }
+}
